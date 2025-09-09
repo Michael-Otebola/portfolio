@@ -1,0 +1,715 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Chen - Creative Developer Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    border: "var(--border)",
+                    ring: "var(--ring)",
+                },
+                fontFamily: {
+                    'space': ['Space Grotesk', 'sans-serif'],
+                    'inter': ['Inter', 'sans-serif'],
+                    'mono': ['JetBrains Mono', 'monospace'],
+                },
+                animation: {
+                    'float': 'float 3s ease-in-out infinite',
+                    'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    'morph': 'morph 8s ease-in-out infinite',
+                    'gradient-shift': 'gradient-shift 15s ease infinite',
+                }
+            },
+        }
+    };
+    </script>
+    <style>
+        :root {
+            --background: hsl(222 47% 11%);
+            --foreground: hsl(210 40% 98%);
+            --card: hsl(222 84% 5%);
+            --card-foreground: hsl(210 40% 98%);
+            --primary: hsl(195 100% 50%);
+            --primary-foreground: hsl(222 47% 11%);
+            --secondary: hsl(270 30% 40%);
+            --secondary-foreground: hsl(210 40% 98%);
+            --muted: hsl(217 32% 17%);
+            --muted-foreground: hsl(215 20% 65%);
+            --accent: hsl(15 100% 60%);
+            --accent-foreground: hsl(210 40% 98%);
+            --border: hsl(217 32% 17%);
+            --ring: hsl(195 100% 50%);
+            --radius: 0.75rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+            overflow-x: hidden;
+        }
+
+        .cursor-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 217, 255, 0.8), transparent 70%);
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: screen;
+            transition: transform 0.1s ease-out;
+        }
+
+        .particle-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .morphing-bg {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, 
+                hsl(195 100% 50% / 0.1), 
+                hsl(270 30% 40% / 0.1), 
+                hsl(15 100% 60% / 0.1), 
+                hsl(195 100% 50% / 0.1));
+            animation: morph 20s ease-in-out infinite;
+            filter: blur(40px);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .liquid-button {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: var(--radius);
+            padding: 12px 24px;
+            color: var(--primary-foreground);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .liquid-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .liquid-button:hover::before {
+            left: 100%;
+        }
+
+        .liquid-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        }
+
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(2n) {
+            animation-delay: -2s;
+        }
+
+        .floating-element:nth-child(3n) {
+            animation-delay: -4s;
+        }
+
+        .gradient-text {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .parallax-layer {
+            transform-style: preserve-3d;
+        }
+
+        .work-item {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .work-item:hover {
+            transform: translateZ(50px) rotateX(5deg) rotateY(5deg);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes morph {
+            0%, 100% { 
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+                transform: rotate(0deg) scale(1);
+            }
+            25% { 
+                border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+                transform: rotate(90deg) scale(1.1);
+            }
+            50% { 
+                border-radius: 70% 30% 40% 60% / 40% 70% 60% 50%;
+                transform: rotate(180deg) scale(0.9);
+            }
+            75% { 
+                border-radius: 40% 70% 60% 30% / 70% 40% 50% 70%;
+                transform: rotate(270deg) scale(1.05);
+            }
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .dynamic-gradient {
+            background: linear-gradient(-45deg, 
+                hsl(195 100% 50%), 
+                hsl(270 30% 40%), 
+                hsl(15 100% 60%), 
+                hsl(120 100% 50%));
+            background-size: 400% 400%;
+            animation: gradient-shift 15s ease infinite;
+        }
+
+        @media (max-width: 768px) {
+            .floating-element {
+                animation-duration: 4s;
+            }
+            
+            .work-item:hover {
+                transform: translateZ(20px) rotateX(2deg) rotateY(2deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cursor Glow Effect -->
+    <div class="cursor-glow"></div>
+
+    <!-- Particle Canvas -->
+    <canvas id="particle-canvas" class="particle-container"></canvas>
+
+    <!-- Navigation -->
+    <nav class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
+        <div class="glass-card px-6 py-3">
+            <div class="flex space-x-8 items-center">
+                <a href="#hero" class="text-primary hover:text-accent transition-colors font-space font-medium">Home</a>
+                <a href="#about" class="text-foreground hover:text-primary transition-colors font-space">About</a>
+                <a href="#work" class="text-foreground hover:text-primary transition-colors font-space">Work</a>
+                <a href="#contact" class="text-foreground hover:text-primary transition-colors font-space">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="morphing-bg"></div>
+        
+        <!-- Floating Elements -->
+        <div class="absolute inset-0 pointer-events-none">
+            <div class="floating-element absolute top-1/4 left-1/4 w-4 h-4 bg-primary rounded-full opacity-60"></div>
+            <div class="floating-element absolute top-1/3 right-1/3 w-6 h-6 bg-accent rounded-full opacity-40"></div>
+            <div class="floating-element absolute bottom-1/4 left-1/3 w-8 h-8 bg-secondary rounded-full opacity-50"></div>
+            <div class="floating-element absolute top-2/3 right-1/4 w-5 h-5 bg-primary rounded-full opacity-70"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+            <h1 class="font-space font-bold text-6xl md:text-8xl mb-6 scroll-reveal">
+                <span class="gradient-text">Alex Chen</span>
+            </h1>
+            <p class="font-inter text-xl md:text-2xl text-muted-foreground mb-8 scroll-reveal">
+                Creative Developer & Digital Artist
+            </p>
+            <p class="font-inter text-lg text-muted-foreground max-w-2xl mx-auto mb-12 scroll-reveal">
+                Crafting immersive digital experiences through advanced CSS animations, 
+                interactive design, and cutting-edge web technologies.
+            </p>
+            <button class="liquid-button font-space font-medium text-lg scroll-reveal">
+                Explore My Work
+            </button>
+        </div>
+
+        <!-- 3D Geometric Shapes -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+            <div class="absolute top-20 left-20 w-32 h-32 border border-primary/20 transform rotate-45 parallax-layer" style="transform: translateZ(100px) rotate(45deg);"></div>
+            <div class="absolute bottom-20 right-20 w-24 h-24 border border-accent/30 transform rotate-12 parallax-layer" style="transform: translateZ(150px) rotate(12deg);"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="relative py-32 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="space-y-8">
+                    <h2 class="font-space font-bold text-5xl gradient-text scroll-reveal">
+                        About Me
+                    </h2>
+                    <p class="font-inter text-lg text-muted-foreground leading-relaxed scroll-reveal">
+                        I'm a creative developer passionate about pushing the boundaries of web design. 
+                        With expertise in advanced CSS animations, JavaScript, and modern frameworks, 
+                        I create digital experiences that captivate and inspire.
+                    </p>
+                    <div class="space-y-4 scroll-reveal">
+                        <div class="glass-card p-6">
+                            <h3 class="font-space font-semibold text-xl text-primary mb-2">Frontend Excellence</h3>
+                            <p class="font-inter text-muted-foreground">Advanced CSS animations, React, Vue, and cutting-edge web technologies.</p>
+                        </div>
+                        <div class="glass-card p-6">
+                            <h3 class="font-space font-semibold text-xl text-accent mb-2">Creative Vision</h3>
+                            <p class="font-inter text-muted-foreground">Transforming ideas into immersive digital experiences that tell stories.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Blob -->
+                <div class="relative">
+                    <div class="glass-card p-8 transform hover:scale-105 transition-transform duration-500">
+                        <div class="relative overflow-hidden rounded-lg">
+                            <!-- Modern developer workspace photo -->
+                            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
+                                 alt="Modern developer workspace with multiple monitors and creative setup" 
+                                 class="w-full h-64 object-cover rounded-lg" />
+                            <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Work Section -->
+    <section id="work" class="relative py-32 px-6">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="font-space font-bold text-5xl gradient-text text-center mb-16 scroll-reveal">
+                Featured Work
+            </h2>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Work Item 1 -->
+                <div class="work-item glass-card p-6 scroll-reveal">
+                    <div class="relative overflow-hidden rounded-lg mb-6">
+                        <!-- Interactive web application screenshot -->
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
+                             alt="Interactive web application with data visualization dashboard" 
+                             class="w-full h-48 object-cover" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    <h3 class="font-space font-semibold text-xl text-primary mb-2">Interactive Dashboard</h3>
+                    <p class="font-inter text-muted-foreground mb-4">Advanced data visualization with real-time animations and particle effects.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-mono">React</span>
+                        <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-sm font-mono">D3.js</span>
+                        <span class="px-3 py-1 bg-secondary/20 text-secondary rounded-full text-sm font-mono">Canvas</span>
+                    </div>
+                </div>
+
+                <!-- Work Item 2 -->
+                <div class="work-item glass-card p-6 scroll-reveal">
+                    <div class="relative overflow-hidden rounded-lg mb-6">
+                        <!-- Creative portfolio website -->
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
+                             alt="Creative portfolio website with modern design and animations" 
+                             class="w-full h-48 object-cover" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-accent/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    <h3 class="font-space font-semibold text-xl text-accent mb-2">Creative Portfolio</h3>
+                    <p class="font-inter text-muted-foreground mb-4">Immersive 3D portfolio with morphing backgrounds and fluid animations.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-mono">CSS3</span>
+                        <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-sm font-mono">GSAP</span>
+                        <span class="px-3 py-1 bg-secondary/20 text-secondary rounded-full text-sm font-mono">Three.js</span>
+                    </div>
+                </div>
+
+                <!-- Work Item 3 -->
+                <div class="work-item glass-card p-6 scroll-reveal">
+                    <div class="relative overflow-hidden rounded-lg mb-6">
+                        <!-- E-commerce interface -->
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
+                             alt="Modern e-commerce interface with smooth animations" 
+                             class="w-full h-48 object-cover" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-secondary/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    <h3 class="font-space font-semibold text-xl text-secondary mb-2">E-commerce Platform</h3>
+                    <p class="font-inter text-muted-foreground mb-4">Liquid design elements with advanced micro-interactions and glassmorphism.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-mono">Vue.js</span>
+                        <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-sm font-mono">Framer</span>
+                        <span class="px-3 py-1 bg-secondary/20 text-secondary rounded-full text-sm font-mono">SCSS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="relative py-32 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="font-space font-bold text-4xl gradient-text mb-16 scroll-reveal">
+                Technical Expertise
+            </h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="glass-card p-6 floating-element scroll-reveal">
+                    <div class="w-16 h-16 mx-auto mb-4 dynamic-gradient rounded-full flex items-center justify-center">
+                        <span class="text-2xl font-bold text-white">CSS</span>
+                    </div>
+                    <h3 class="font-space font-semibold text-lg text-primary mb-2">Advanced CSS</h3>
+                    <p class="font-inter text-sm text-muted-foreground">Animations, Transforms, Grid, Flexbox</p>
+                </div>
+
+                <div class="glass-card p-6 floating-element scroll-reveal">
+                    <div class="w-16 h-16 mx-auto mb-4 dynamic-gradient rounded-full flex items-center justify-center">
+                        <span class="text-2xl font-bold text-white">JS</span>
+                    </div>
+                    <h3 class="font-space font-semibold text-lg text-accent mb-2">JavaScript</h3>
+                    <p class="font-inter text-sm text-muted-foreground">ES6+, Canvas, WebGL, Performance</p>
+                </div>
+
+                <div class="glass-card p-6 floating-element scroll-reveal">
+                    <div class="w-16 h-16 mx-auto mb-4 dynamic-gradient rounded-full flex items-center justify-center">
+                        <span class="text-2xl font-bold text-white">3D</span>
+                    </div>
+                    <h3 class="font-space font-semibold text-lg text-secondary mb-2">3D Graphics</h3>
+                    <p class="font-inter text-sm text-muted-foreground">Three.js, WebGL, CSS 3D</p>
+                </div>
+
+                <div class="glass-card p-6 floating-element scroll-reveal">
+                    <div class="w-16 h-16 mx-auto mb-4 dynamic-gradient rounded-full flex items-center justify-center">
+                        <span class="text-2xl font-bold text-white">UI</span>
+                    </div>
+                    <h3 class="font-space font-semibold text-lg text-primary mb-2">UI/UX Design</h3>
+                    <p class="font-inter text-sm text-muted-foreground">Figma, Motion Design, Prototyping</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="relative py-32 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="font-space font-bold text-5xl gradient-text mb-8 scroll-reveal">
+                Let's Create Together
+            </h2>
+            <p class="font-inter text-xl text-muted-foreground mb-12 scroll-reveal">
+                Ready to bring your vision to life with cutting-edge animations and interactions?
+            </p>
+
+            <div class="glass-card p-8 max-w-2xl mx-auto scroll-reveal">
+                <form class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <input type="text" placeholder="Your Name" 
+                               class="w-full px-4 py-3 bg-muted/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground placeholder-muted-foreground">
+                        <input type="email" placeholder="Your Email" 
+                               class="w-full px-4 py-3 bg-muted/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground placeholder-muted-foreground">
+                    </div>
+                    <textarea placeholder="Tell me about your project..." rows="5"
+                              class="w-full px-4 py-3 bg-muted/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground placeholder-muted-foreground resize-none"></textarea>
+                    <button type="submit" class="liquid-button font-space font-medium text-lg w-full">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+
+            <!-- Social Links -->
+            <div class="flex justify-center space-x-6 mt-12">
+                <a href="#" class="glass-card p-4 hover:scale-110 transition-transform duration-300">
+                    <span class="text-primary font-space font-semibold">GitHub</span>
+                </a>
+                <a href="#" class="glass-card p-4 hover:scale-110 transition-transform duration-300">
+                    <span class="text-accent font-space font-semibold">LinkedIn</span>
+                </a>
+                <a href="#" class="glass-card p-4 hover:scale-110 transition-transform duration-300">
+                    <span class="text-secondary font-space font-semibold">Twitter</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative py-12 px-6 border-t border-border/20">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="font-inter text-muted-foreground">
+                © 2024 Alex Chen. Crafted with passion and advanced CSS animations.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Particle System using Canvas
+        (function() {
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let mouse = { x: 0, y: 0 };
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.size = Math.random() * 2 + 1;
+                    this.opacity = Math.random() * 0.5 + 0.2;
+                    this.color = `hsl(${Math.random() * 60 + 180}, 70%, 60%)`;
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // Mouse interaction
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        this.vx += dx * 0.0001;
+                        this.vy += dy * 0.0001;
+                    }
+
+                    // Boundaries
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                    // Keep particles in bounds
+                    this.x = Math.max(0, Math.min(canvas.width, this.x));
+                    this.y = Math.max(0, Math.min(canvas.height, this.y));
+                }
+
+                draw() {
+                    ctx.globalAlpha = this.opacity;
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                for (let i = 0; i < 100; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach(particle => {
+                    particle.update();
+                    particle.draw();
+                });
+
+                // Draw connections
+                ctx.globalAlpha = 0.1;
+                ctx.strokeStyle = 'hsl(195, 100%, 50%)';
+                particles.forEach((particleA, indexA) => {
+                    particles.slice(indexA + 1).forEach(particleB => {
+                        const dx = particleA.x - particleB.x;
+                        const dy = particleA.y - particleB.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 100) {
+                            ctx.beginPath();
+                            ctx.moveTo(particleA.x, particleA.y);
+                            ctx.lineTo(particleB.x, particleB.y);
+                            ctx.stroke();
+                        }
+                    });
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            // Mouse tracking
+            document.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+
+            // Initialize
+            resizeCanvas();
+            initParticles();
+            animate();
+
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                initParticles();
+            });
+        })();
+
+        // Cursor Glow Effect
+        (function() {
+            const cursorGlow = document.querySelector('.cursor-glow');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursorGlow.style.left = e.clientX - 10 + 'px';
+                cursorGlow.style.top = e.clientY - 10 + 'px';
+            });
+        })();
+
+        // Scroll Reveal Animation
+        (function() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                observer.observe(el);
+            });
+        })();
+
+        // Dynamic Gradient Response to Mouse
+        (function() {
+            const gradients = document.querySelectorAll('.dynamic-gradient');
+            
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth) * 100;
+                const y = (e.clientY / window.innerHeight) * 100;
+                
+                gradients.forEach(gradient => {
+                    gradient.style.backgroundPosition = `${x}% ${y}%`;
+                });
+            });
+        })();
+
+        // Smooth Scrolling for Navigation
+        (function() {
+            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        })();
+
+        // 3D Parallax Effect
+        (function() {
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallaxLayers = document.querySelectorAll('.parallax-layer');
+                
+                parallaxLayers.forEach((layer, index) => {
+                    const speed = 0.1 + (index * 0.05);
+                    const yPos = -(scrolled * speed);
+                    layer.style.transform = `translateZ(${100 + index * 50}px) translateY(${yPos}px)`;
+                });
+            });
+        })();
+
+        // Performance optimization for mobile
+        if (window.innerWidth < 768) {
+            // Reduce particle count on mobile
+            const canvas = document.getElementById('particle-canvas');
+            if (canvas) {
+                // TODO: Implement mobile-optimized particle system
+            }
+        }
+    </script>
+</body>
+</html>

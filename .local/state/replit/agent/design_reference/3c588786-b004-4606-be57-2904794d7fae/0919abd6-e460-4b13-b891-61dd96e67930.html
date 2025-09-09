@@ -1,0 +1,1013 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Michael Otegbola - Advanced Web Developer & UI/UX Designer Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    border: "var(--border)",
+                    ring: "var(--ring)",
+                },
+                fontFamily: {
+                    sans: ["Inter", "system-ui", "sans-serif"],
+                    display: ["Poppins", "system-ui", "sans-serif"],
+                }
+            },
+        }
+    };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --background: hsl(240 10% 8%);
+            --foreground: hsl(0 0% 95%);
+            --primary: hsl(280 100% 60%);
+            --primary-foreground: hsl(0 0% 100%);
+            --secondary: hsl(240 5% 12%);
+            --secondary-foreground: hsl(0 0% 90%);
+            --accent: hsl(200 100% 50%);
+            --accent-foreground: hsl(0 0% 100%);
+            --muted: hsl(240 5% 15%);
+            --muted-foreground: hsl(0 0% 70%);
+            --border: hsl(240 5% 20%);
+            --ring: hsl(280 100% 60%);
+            --radius: 1rem;
+            --glass-bg: hsla(240 10% 20% / 0.1);
+            --electric-blue: hsl(200 100% 50%);
+            --neon-green: hsl(120 100% 50%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.2s ease;
+        }
+
+        .custom-cursor.hover {
+            transform: scale(2);
+        }
+
+        /* Particle Canvas */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Morphing Blob Background */
+        .blob-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .morphing-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: morphBlob 20s ease-in-out infinite;
+            opacity: 0.1;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            bottom: 20%;
+            right: 10%;
+            animation-delay: 10s;
+        }
+
+        .blob-3 {
+            width: 350px;
+            height: 350px;
+            background: var(--neon-green);
+            top: 60%;
+            left: 60%;
+            animation-delay: 5s;
+        }
+
+        @keyframes morphBlob {
+            0%, 100% {
+                border-radius: 50% 50% 50% 50%;
+                transform: rotate(0deg) scale(1);
+            }
+            33% {
+                border-radius: 70% 30% 70% 30%;
+                transform: rotate(120deg) scale(1.1);
+            }
+            66% {
+                border-radius: 30% 70% 30% 70%;
+                transform: rotate(240deg) scale(0.9);
+            }
+        }
+
+        /* Dynamic Gradient Background */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                        rgba(168, 85, 247, 0.15) 0%, 
+                        rgba(59, 130, 246, 0.1) 35%, 
+                        transparent 70%);
+            pointer-events: none;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-dynamic {
+            backdrop-filter: blur(var(--blur-amount, 20px));
+            transition: backdrop-filter 0.3s ease;
+        }
+
+        /* Navigation */
+        .nav-glass {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            animation: breathe 3s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.02); }
+        }
+
+        /* 3D Transform Sections */
+        .section-3d {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .layer-1 { transform: translateZ(50px); }
+        .layer-2 { transform: translateZ(30px); }
+        .layer-3 { transform: translateZ(10px); }
+
+        /* Liquid Buttons */
+        .liquid-btn {
+            position: relative;
+            overflow: hidden;
+            border-radius: 50px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            transition: all 0.3s ease;
+        }
+
+        .liquid-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .liquid-btn:hover::before {
+            left: 100%;
+        }
+
+        .liquid-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(168, 85, 247, 0.3);
+        }
+
+        /* Skill Cards */
+        .skill-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .skill-card:hover {
+            transform: rotateY(10deg) rotateX(5deg) translateZ(20px);
+            box-shadow: 0 30px 60px rgba(168, 85, 247, 0.2);
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            height: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            width: 0%;
+            transition: width 2s ease;
+            border-radius: 10px;
+        }
+
+        /* Project Cards */
+        .project-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-card:hover .project-image {
+            transform: scale(1.05);
+        }
+
+        .project-image {
+            transition: transform 0.4s ease;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* Scroll Animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Fluid Typography */
+        .fluid-text {
+            font-size: clamp(2rem, 8vw, 6rem);
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--foreground), var(--primary), var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Floating Animation */
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--muted);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--primary), var(--accent));
+            border-radius: 4px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .blob-1, .blob-2, .blob-3 {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .skill-card:hover {
+                transform: translateY(-5px);
+            }
+            
+            .project-card:hover {
+                transform: translateY(-5px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+
+    <!-- Particle Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Morphing Blob Background -->
+    <div class="blob-container">
+        <div class="morphing-blob blob-1"></div>
+        <div class="morphing-blob blob-2"></div>
+        <div class="morphing-blob blob-3"></div>
+    </div>
+
+    <!-- Dynamic Gradient Background -->
+    <div class="gradient-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="nav-glass glass rounded-full px-8 py-4">
+        <div class="flex items-center space-x-8">
+            <a href="#home" class="text-sm font-medium hover:text-primary transition-colors">Home</a>
+            <a href="#skills" class="text-sm font-medium hover:text-primary transition-colors">Skills</a>
+            <a href="#projects" class="text-sm font-medium hover:text-primary transition-colors">Projects</a>
+            <a href="#contact" class="text-sm font-medium hover:text-primary transition-colors">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative z-10 section-3d">
+        <div class="text-center max-w-4xl mx-auto px-6">
+            <div class="layer-1">
+                <h1 class="fluid-text font-display font-bold mb-8">
+                    Michael Otegbola
+                </h1>
+            </div>
+            <div class="layer-2">
+                <p class="text-xl md:text-2xl text-muted-foreground mb-4">
+                    Advanced Web Developer & UI/UX Designer
+                </p>
+                <p class="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
+                    Crafting immersive digital experiences with cutting-edge technologies, 
+                    advanced animations, and user-centric design principles.
+                </p>
+            </div>
+            <div class="layer-3 flex flex-col sm:flex-row gap-6 justify-center">
+                <button class="liquid-btn px-8 py-4 text-white font-semibold">
+                    <span class="relative z-10">View My Work</span>
+                </button>
+                <a href="https://wa.me/2349012919868" target="_blank" 
+                   class="glass rounded-full px-8 py-4 border border-primary/20 hover:border-primary/50 transition-all">
+                    <i class="fab fa-whatsapp mr-2"></i> Let's Connect
+                </a>
+            </div>
+        </div>
+        
+        <!-- Floating Elements -->
+        <div class="absolute top-20 left-10 floating">
+            <div class="w-20 h-20 rounded-lg glass border border-primary/20"></div>
+        </div>
+        <div class="absolute bottom-32 right-16 floating" style="animation-delay: -2s;">
+            <div class="w-16 h-16 rounded-full glass border border-accent/20"></div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-32 relative z-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20 scroll-reveal">
+                <h2 class="text-4xl md:text-5xl font-display font-bold mb-6">
+                    Interactive <span class="text-primary">Skills</span>
+                </h2>
+                <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+                    Advanced technical expertise in modern web technologies and design systems
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- HTML/CSS Skill Card -->
+                <div class="skill-card rounded-xl p-8 scroll-reveal" data-skill="html">
+                    <div class="text-4xl mb-4 text-primary">
+                        <i class="fab fa-html5"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">HTML/CSS</h3>
+                    <p class="text-muted-foreground mb-4">Advanced semantic markup and modern CSS including Grid, Flexbox, and animations</p>
+                    <div class="progress-bar mb-2">
+                        <div class="progress-fill" data-progress="95"></div>
+                    </div>
+                    <span class="text-sm text-muted-foreground">95% Proficiency</span>
+                </div>
+
+                <!-- JavaScript Skill Card -->
+                <div class="skill-card rounded-xl p-8 scroll-reveal" data-skill="javascript">
+                    <div class="text-4xl mb-4 text-accent">
+                        <i class="fab fa-js-square"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">JavaScript</h3>
+                    <p class="text-muted-foreground mb-4">ES6+, DOM manipulation, async programming, and modern JavaScript frameworks</p>
+                    <div class="progress-bar mb-2">
+                        <div class="progress-fill" data-progress="90"></div>
+                    </div>
+                    <span class="text-sm text-muted-foreground">90% Proficiency</span>
+                </div>
+
+                <!-- React Skill Card -->
+                <div class="skill-card rounded-xl p-8 scroll-reveal" data-skill="react">
+                    <div class="text-4xl mb-4 text-blue-400">
+                        <i class="fab fa-react"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">React</h3>
+                    <p class="text-muted-foreground mb-4">Component architecture, hooks, state management, and modern React patterns</p>
+                    <div class="progress-bar mb-2">
+                        <div class="progress-fill" data-progress="85"></div>
+                    </div>
+                    <span class="text-sm text-muted-foreground">85% Proficiency</span>
+                </div>
+
+                <!-- UI/UX Design Skill Card -->
+                <div class="skill-card rounded-xl p-8 scroll-reveal" data-skill="design">
+                    <div class="text-4xl mb-4 text-pink-400">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">UI/UX Design</h3>
+                    <p class="text-muted-foreground mb-4">User-centered design, prototyping, design systems, and accessibility</p>
+                    <div class="progress-bar mb-2">
+                        <div class="progress-fill" data-progress="88"></div>
+                    </div>
+                    <span class="text-sm text-muted-foreground">88% Proficiency</span>
+                </div>
+
+                <!-- Responsive Design Skill Card -->
+                <div class="skill-card rounded-xl p-8 scroll-reveal" data-skill="responsive">
+                    <div class="text-4xl mb-4 text-green-400">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Responsive Design</h3>
+                    <p class="text-muted-foreground mb-4">Mobile-first approach, cross-browser compatibility, and performance optimization</p>
+                    <div class="progress-bar mb-2">
+                        <div class="progress-fill" data-progress="92"></div>
+                    </div>
+                    <span class="text-sm text-muted-foreground">92% Proficiency</span>
+                </div>
+
+                <!-- Animation/Motion Graphics Skill Card -->
+                <div class="skill-card rounded-xl p-8 scroll-reveal" data-skill="animation">
+                    <div class="text-4xl mb-4 text-purple-400">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Animation/Motion Graphics</h3>
+                    <p class="text-muted-foreground mb-4">CSS animations, Canvas API, WebGL, and interactive motion design</p>
+                    <div class="progress-bar mb-2">
+                        <div class="progress-fill" data-progress="87"></div>
+                    </div>
+                    <span class="text-sm text-muted-foreground">87% Proficiency</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Church Projects Section -->
+    <section id="church-projects" class="py-32 relative z-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20 scroll-reveal">
+                <h2 class="text-4xl md:text-5xl font-display font-bold mb-6">
+                    Church <span class="text-primary">Projects</span>
+                </h2>
+                <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+                    Faith-based organizations empowered through modern web solutions
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- CCDM Texas Project -->
+                <div class="project-card rounded-xl overflow-hidden scroll-reveal">
+                    <div class="project-image">
+                        <!-- Church building with cross and modern architecture -->
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500" 
+                             alt="CCDM Texas - Christ Covenant Deliverance Ministries website" 
+                             class="w-full h-64 object-cover">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-semibold mb-4">CCDM Texas</h3>
+                        <p class="text-muted-foreground mb-6">
+                            Christ Covenant Deliverance Ministries - A comprehensive church website featuring 
+                            live streaming, event management, leadership profiles, and community engagement tools.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm">HTML/CSS</span>
+                            <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-sm">JavaScript</span>
+                            <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">Responsive</span>
+                        </div>
+                        <a href="#" class="liquid-btn inline-block px-6 py-3 text-white font-medium rounded-full">
+                            <span class="relative z-10">View Live Site</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Women Standing in Gap Project -->
+                <div class="project-card rounded-xl overflow-hidden scroll-reveal">
+                    <div class="project-image">
+                        <!-- Women in prayer or worship setting -->
+                        <img src="https://images.unsplash.com/photo-1438032005730-c779502df39b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500" 
+                             alt="Women Standing in Gap International Ministry website" 
+                             class="w-full h-64 object-cover">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-semibold mb-4">Women Standing in Gap</h3>
+                        <p class="text-muted-foreground mb-6">
+                            International prayer ministry website with global sisterhood features, 
+                            prayer schedules, ministry programs, and community building tools.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm">WordPress</span>
+                            <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-sm">Custom Theme</span>
+                            <span class="px-3 py-1 bg-pink-500/20 text-pink-400 rounded-full text-sm">Community</span>
+                        </div>
+                        <a href="#" class="liquid-btn inline-block px-6 py-3 text-white font-medium rounded-full">
+                            <span class="relative z-10">View Live Site</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Creative Portfolio Section -->
+    <section id="creative-projects" class="py-32 relative z-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20 scroll-reveal">
+                <h2 class="text-4xl md:text-5xl font-display font-bold mb-6">
+                    Creative <span class="text-accent">Portfolios</span>
+                </h2>
+                <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+                    Personal brand websites showcasing individual expertise and professional achievements
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Soniran Portfolio -->
+                <div class="project-card rounded-xl overflow-hidden scroll-reveal">
+                    <div class="project-image">
+                        <!-- Professional business analytics dashboard -->
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400" 
+                             alt="Mary Oluwabukunmi Soniran - Business Analytics Portfolio" 
+                             class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3">Soniran</h3>
+                        <p class="text-muted-foreground mb-4 text-sm">
+                            Business Analytics professional portfolio featuring data visualization, project showcases, and certifications.
+                        </p>
+                        <a href="#" class="text-primary hover:text-accent transition-colors text-sm font-medium">
+                            View Portfolio →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Isaac Oyetesu Portfolio -->
+                <div class="project-card rounded-xl overflow-hidden scroll-reveal">
+                    <div class="project-image">
+                        <!-- Physics and mathematics education -->
+                        <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400" 
+                             alt="Isaac Oyetesu - Physics & Mathematics Educator Portfolio" 
+                             class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3">Isaac Oyetesu</h3>
+                        <p class="text-muted-foreground mb-4 text-sm">
+                            Remote Physics & Mathematics educator with virtual classroom features and student engagement tools.
+                        </p>
+                        <a href="#" class="text-primary hover:text-accent transition-colors text-sm font-medium">
+                            View Portfolio →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Idowu Deborah Portfolio -->
+                <div class="project-card rounded-xl overflow-hidden scroll-reveal">
+                    <div class="project-image">
+                        <!-- Cloud architecture and Azure solutions -->
+                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400" 
+                             alt="Deborah Idowu - Azure Solutions Architect Portfolio" 
+                             class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3">Idowu Deborah</h3>
+                        <p class="text-muted-foreground mb-4 text-sm">
+                            Azure Solutions Architect portfolio showcasing cloud infrastructure projects and technical expertise.
+                        </p>
+                        <a href="#" class="text-primary hover:text-accent transition-colors text-sm font-medium">
+                            View Portfolio →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Florence Omowumi Portfolio -->
+                <div class="project-card rounded-xl overflow-hidden scroll-reveal">
+                    <div class="project-image">
+                        <!-- Customer service and support -->
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400" 
+                             alt="Florence Omowumi - Customer Care Specialist Portfolio" 
+                             class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3">Florence Omowumi</h3>
+                        <p class="text-muted-foreground mb-4 text-sm">
+                            Customer Care & Virtual Support specialist portfolio with service excellence showcase.
+                        </p>
+                        <a href="#" class="text-primary hover:text-accent transition-colors text-sm font-medium">
+                            View Portfolio →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Jeremiah Adeleye Portfolio -->
+                <div class="project-card rounded-xl overflow-hidden scroll-reveal">
+                    <div class="project-image">
+                        <!-- Computer science research and education -->
+                        <img src="https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400" 
+                             alt="Jeremiah Adeleye - Computer Science PhD Candidate Portfolio" 
+                             class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3">Jeremiah Adeleye</h3>
+                        <p class="text-muted-foreground mb-4 text-sm">
+                            Computer Science PhD candidate portfolio featuring research projects and academic achievements.
+                        </p>
+                        <a href="#" class="text-primary hover:text-accent transition-colors text-sm font-medium">
+                            View Portfolio →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Additional Portfolio Slot -->
+                <div class="project-card rounded-xl overflow-hidden scroll-reveal">
+                    <div class="project-image">
+                        <!-- Modern web development -->
+                        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400" 
+                             alt="Custom Web Development Project" 
+                             class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3">Custom Projects</h3>
+                        <p class="text-muted-foreground mb-4 text-sm">
+                            Bespoke web solutions tailored to unique client requirements and business objectives.
+                        </p>
+                        <a href="#" class="text-primary hover:text-accent transition-colors text-sm font-medium">
+                            View Portfolio →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-32 relative z-10">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="scroll-reveal">
+                <h2 class="text-4xl md:text-5xl font-display font-bold mb-8">
+                    Let's Create Something <span class="text-primary">Amazing</span>
+                </h2>
+                <p class="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
+                    Ready to transform your digital presence with cutting-edge web solutions and immersive user experiences?
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                    <a href="https://wa.me/2349012919868" target="_blank" 
+                       class="liquid-btn px-8 py-4 text-white font-semibold rounded-full inline-flex items-center justify-center">
+                        <span class="relative z-10">
+                            <i class="fab fa-whatsapp mr-2"></i> WhatsApp
+                        </span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/michael-otegbola-269b8324a/" target="_blank"
+                       class="glass rounded-full px-8 py-4 border border-accent/20 hover:border-accent/50 transition-all inline-flex items-center justify-center">
+                        <i class="fab fa-linkedin mr-2"></i> LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-border relative z-10">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-muted-foreground">
+                © 2025 Michael Otegbola. Crafted with advanced animations and cutting-edge technologies.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.custom-cursor');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Update gradient background
+            const gradientBg = document.querySelector('.gradient-bg');
+            gradientBg.style.setProperty('--mouse-x', (e.clientX / window.innerWidth * 100) + '%');
+            gradientBg.style.setProperty('--mouse-y', (e.clientY / window.innerHeight * 100) + '%');
+        });
+
+        // Smooth cursor animation
+        function animateCursor() {
+            const distX = mouseX - cursorX;
+            const distY = mouseY - cursorY;
+            
+            cursorX += distX * 0.15;
+            cursorY += distY * 0.15;
+            
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Cursor hover effects
+        const hoverElements = document.querySelectorAll('a, button, .skill-card, .project-card');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Particle System
+        class ParticleSystem {
+            constructor() {
+                this.canvas = document.getElementById('particleCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.particleCount = 80;
+                this.connectionDistance = 120;
+                
+                this.resize();
+                this.init();
+                this.animate();
+                
+                window.addEventListener('resize', () => this.resize());
+                this.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            init() {
+                this.particles = [];
+                for (let i = 0; i < this.particleCount; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        size: Math.random() * 2 + 1,
+                        opacity: Math.random() * 0.5 + 0.2
+                    });
+                }
+            }
+
+            onMouseMove(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+
+                this.particles.forEach(particle => {
+                    const dx = mouseX - particle.x;
+                    const dy = mouseY - particle.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        const force = (100 - distance) / 100;
+                        particle.vx += (dx / distance) * force * 0.02;
+                        particle.vy += (dy / distance) * force * 0.02;
+                    }
+                });
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Update particles
+                this.particles.forEach(particle => {
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    
+                    // Boundary bounce
+                    if (particle.x < 0 || particle.x > this.canvas.width) particle.vx *= -1;
+                    if (particle.y < 0 || particle.y > this.canvas.height) particle.vy *= -1;
+                    
+                    // Apply friction
+                    particle.vx *= 0.99;
+                    particle.vy *= 0.99;
+                });
+
+                // Draw connections
+                this.ctx.strokeStyle = 'rgba(168, 85, 247, 0.1)';
+                this.ctx.lineWidth = 1;
+                
+                for (let i = 0; i < this.particles.length; i++) {
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        const dx = this.particles[i].x - this.particles[j].x;
+                        const dy = this.particles[i].y - this.particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < this.connectionDistance) {
+                            const opacity = (this.connectionDistance - distance) / this.connectionDistance;
+                            this.ctx.strokeStyle = `rgba(168, 85, 247, ${opacity * 0.2})`;
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
+                            this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+                            this.ctx.stroke();
+                        }
+                    }
+                }
+
+                // Draw particles
+                this.particles.forEach(particle => {
+                    this.ctx.fillStyle = `rgba(168, 85, 247, ${particle.opacity})`;
+                    this.ctx.beginPath();
+                    this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    this.ctx.fill();
+                });
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Initialize particle system
+        new ParticleSystem();
+
+        // Scroll Reveal Animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Progress Bar Animation
+        const progressObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const progressBar = entry.target.querySelector('.progress-fill');
+                    const progress = progressBar.getAttribute('data-progress');
+                    setTimeout(() => {
+                        progressBar.style.width = progress + '%';
+                    }, 500);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.skill-card').forEach(card => {
+            progressObserver.observe(card);
+        });
+
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Dynamic Glassmorphism Blur
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            
+            // Update blur amount based on scroll
+            const blurAmount = Math.min(20 + scrolled * 0.05, 40);
+            document.documentElement.style.setProperty('--blur-amount', blurAmount + 'px');
+            
+            // Parallax effect for floating elements
+            const floatingElements = document.querySelectorAll('.floating');
+            floatingElements.forEach((el, index) => {
+                const speed = 0.5 + index * 0.1;
+                el.style.transform = `translateY(${rate * speed}px)`;
+            });
+        });
+
+        // Performance optimization
+        let ticking = false;
+
+        function updateAnimations() {
+            // Add any frame-based animations here
+            ticking = false;
+        }
+
+        function requestTick() {
+            if (!ticking) {
+                requestAnimationFrame(updateAnimations);
+                ticking = true;
+            }
+        }
+
+        // Initialize animations on load
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '1';
+            requestTick();
+        });
+
+        // Preload critical images
+        const criticalImages = [
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+            'https://images.unsplash.com/photo-1438032005730-c779502df39b',
+            'https://images.unsplash.com/photo-1551288049-bebda4e38f71'
+        ];
+
+        criticalImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+    </script>
+</body>
+</html>

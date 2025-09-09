@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Michael Otegbola - Web Developer & UI/UX Designer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    border: "var(--border)",
+                    ring: "var(--ring)",
+                }
+            },
+            fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+                display: ['Poppins', 'sans-serif'],
+            }
+        },
+    };
+    </script>
+    <style>
+        :root {
+            --background: hsl(240 10% 4%);
+            --foreground: hsl(240 5% 96%);
+            --primary: hsl(193 100% 50%);
+            --primary-foreground: hsl(240 10% 4%);
+            --secondary: hsl(262 52% 47%);
+            --secondary-foreground: hsl(240 5% 96%);
+            --accent: hsl(17 100% 60%);
+            --accent-foreground: hsl(240 10% 4%);
+            --muted: hsl(240 6% 15%);
+            --muted-foreground: hsl(240 5% 65%);
+            --border: hsl(240 6% 20%);
+            --ring: hsl(193 100% 50%);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+            overflow-x: hidden;
+        }
+
+        /* Particle System Canvas */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Morphing Blob Background */
+        .blob-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .morphing-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: blobMorph 20s ease-in-out infinite;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            bottom: -175px;
+            right: -175px;
+            animation-delay: -10s;
+        }
+
+        .blob-3 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(225deg, var(--accent), var(--primary));
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -5s;
+        }
+
+        @keyframes blobMorph {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1) rotate(0deg);
+                border-radius: 50% 40% 60% 30%;
+            }
+            25% { 
+                transform: translate(100px, -50px) scale(1.1) rotate(90deg);
+                border-radius: 40% 60% 30% 50%;
+            }
+            50% { 
+                transform: translate(-50px, 100px) scale(0.9) rotate(180deg);
+                border-radius: 60% 30% 50% 40%;
+            }
+            75% { 
+                transform: translate(-100px, -100px) scale(1.2) rotate(270deg);
+                border-radius: 30% 50% 40% 60%;
+            }
+        }
+
+        /* Glassmorphism Effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+        }
+
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, var(--primary), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+        }
+
+        /* 3D Transform Containers */
+        .transform-3d {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .layer-1 {
+            transform: translateZ(0px);
+        }
+
+        .layer-2 {
+            transform: translateZ(50px);
+        }
+
+        .layer-3 {
+            transform: translateZ(100px);
+        }
+
+        /* Scroll Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Project Cards Hover Effects */
+        .project-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(0);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) rotateX(5deg) rotateY(5deg);
+        }
+
+        /* Liquid Navigation */
+        .liquid-nav {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .liquid-nav::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .liquid-nav:hover::before {
+            left: 100%;
+        }
+
+        /* Dynamic Gradient Animation */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .blob-1, .blob-2, .blob-3 {
+                width: 200px;
+                height: 200px;
+                filter: blur(60px);
+            }
+            
+            .transform-3d {
+                perspective: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="cursor"></div>
+
+    <!-- Particle Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Morphing Blob Background -->
+    <div class="blob-container">
+        <div class="morphing-blob blob-1"></div>
+        <div class="morphing-blob blob-2"></div>
+        <div class="morphing-blob blob-3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-2xl font-display font-bold gradient-text">
+                MO
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="liquid-nav px-4 py-2 rounded-lg transition-colors hover:text-primary">Home</a>
+                <a href="#projects" class="liquid-nav px-4 py-2 rounded-lg transition-colors hover:text-primary">Projects</a>
+                <a href="#about" class="liquid-nav px-4 py-2 rounded-lg transition-colors hover:text-primary">About</a>
+                <a href="#contact" class="liquid-nav px-4 py-2 rounded-lg transition-colors hover:text-primary">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10">
+        <!-- Hero Section -->
+        <section id="home" class="min-h-screen flex items-center justify-center transform-3d">
+            <div class="text-center layer-2 fade-in">
+                <h1 class="text-6xl md:text-8xl font-display font-bold mb-6 gradient-text">
+                    Michael Otegbola
+                </h1>
+                <p class="text-xl md:text-2xl text-muted-foreground mb-8 layer-1">
+                    Web Developer & UI/UX Designer
+                </p>
+                <div class="flex flex-col md:flex-row gap-4 justify-center items-center layer-3">
+                    <a href="#projects" class="glass-strong px-8 py-4 rounded-lg hover:scale-105 transition-all duration-300">
+                        View My Work
+                    </a>
+                    <a href="https://wa.me/2349012919868" target="_blank" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 px-8 py-4 rounded-lg transition-all duration-300 hover:scale-105">
+                        <i class="fab fa-whatsapp text-xl"></i>
+                        WhatsApp
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-20 px-4">
+            <div class="container mx-auto">
+                <h2 class="text-4xl md:text-6xl font-display font-bold text-center mb-16 gradient-text fade-in">
+                    Featured Projects
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project Card 1 -->
+                    <div class="project-card glass p-6 rounded-xl fade-in" data-delay="0.2s">
+                        <!-- Modern e-commerce platform with sleek product showcase -->
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500" alt="E-commerce Platform Screenshot" class="w-full h-48 object-cover rounded-lg mb-4" data-mock-image="true">
+                        <h3 class="text-xl font-bold mb-2">E-Commerce Platform</h3>
+                        <p class="text-muted-foreground mb-4">Modern shopping experience with advanced filtering and seamless checkout.</p>
+                        <a href="#" class="inline-flex items-center gap-2 text-primary hover:text-secondary transition-colors" data-mock="true">
+                            View Live <i class="fas fa-external-link-alt text-sm"></i>
+                        </a>
+                    </div>
+
+                    <!-- Project Card 2 -->
+                    <div class="project-card glass p-6 rounded-xl fade-in" data-delay="0.4s">
+                        <!-- Creative portfolio website with artistic layout -->
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500" alt="Portfolio Website Screenshot" class="w-full h-48 object-cover rounded-lg mb-4" data-mock-image="true">
+                        <h3 class="text-xl font-bold mb-2">Creative Portfolio</h3>
+                        <p class="text-muted-foreground mb-4">Artist portfolio with interactive galleries and smooth animations.</p>
+                        <a href="#" class="inline-flex items-center gap-2 text-primary hover:text-secondary transition-colors" data-mock="true">
+                            View Live <i class="fas fa-external-link-alt text-sm"></i>
+                        </a>
+                    </div>
+
+                    <!-- Project Card 3 -->
+                    <div class="project-card glass p-6 rounded-xl fade-in" data-delay="0.6s">
+                        <!-- Corporate dashboard with data visualization -->
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500" alt="Corporate Dashboard Screenshot" class="w-full h-48 object-cover rounded-lg mb-4" data-mock-image="true">
+                        <h3 class="text-xl font-bold mb-2">Corporate Dashboard</h3>
+                        <p class="text-muted-foreground mb-4">Real-time analytics dashboard with interactive charts and KPIs.</p>
+                        <a href="#" class="inline-flex items-center gap-2 text-primary hover:text-secondary transition-colors" data-mock="true">
+                            View Live <i class="fas fa-external-link-alt text-sm"></i>
+                        </a>
+                    </div>
+
+                    <!-- Project Card 4 -->
+                    <div class="project-card glass p-6 rounded-xl fade-in" data-delay="0.8s">
+                        <!-- Mobile app landing page design -->
+                        <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500" alt="Mobile App Landing Page Screenshot" class="w-full h-48 object-cover rounded-lg mb-4" data-mock-image="true">
+                        <h3 class="text-xl font-bold mb-2">Mobile App Landing</h3>
+                        <p class="text-muted-foreground mb-4">Responsive landing page for iOS/Android app with download integration.</p>
+                        <a href="#" class="inline-flex items-center gap-2 text-primary hover:text-secondary transition-colors" data-mock="true">
+                            View Live <i class="fas fa-external-link-alt text-sm"></i>
+                        </a>
+                    </div>
+
+                    <!-- Project Card 5 -->
+                    <div class="project-card glass p-6 rounded-xl fade-in" data-delay="1.0s">
+                        <!-- Restaurant website with online ordering -->
+                        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500" alt="Restaurant Website Screenshot" class="w-full h-48 object-cover rounded-lg mb-4" data-mock-image="true">
+                        <h3 class="text-xl font-bold mb-2">Restaurant Website</h3>
+                        <p class="text-muted-foreground mb-4">Food ordering platform with menu management and delivery tracking.</p>
+                        <a href="#" class="inline-flex items-center gap-2 text-primary hover:text-secondary transition-colors" data-mock="true">
+                            View Live <i class="fas fa-external-link-alt text-sm"></i>
+                        </a>
+                    </div>
+
+                    <!-- Project Card 6 -->
+                    <div class="project-card glass p-6 rounded-xl fade-in" data-delay="1.2s">
+                        <!-- Real estate platform design -->
+                        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500" alt="Real Estate Platform Screenshot" class="w-full h-48 object-cover rounded-lg mb-4" data-mock-image="true">
+                        <h3 class="text-xl font-bold mb-2">Real Estate Platform</h3>
+                        <p class="text-muted-foreground mb-4">Property listings with virtual tours and advanced search filters.</p>
+                        <a href="#" class="inline-flex items-center gap-2 text-primary hover:text-secondary transition-colors" data-mock="true">
+                            View Live <i class="fas fa-external-link-alt text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 px-4">
+            <div class="container mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="slide-in-left">
+                        <h2 class="text-4xl md:text-6xl font-display font-bold mb-6 gradient-text">
+                            About Me
+                        </h2>
+                        <p class="text-lg text-muted-foreground mb-6">
+                            I'm a passionate web developer and UI/UX designer with expertise in creating 
+                            immersive digital experiences. My work focuses on combining cutting-edge 
+                            technology with intuitive design to deliver exceptional user experiences.
+                        </p>
+                        <p class="text-lg text-muted-foreground mb-8">
+                            Specializing in modern web technologies, advanced animations, and responsive 
+                            design, I transform ideas into engaging digital solutions that captivate and convert.
+                        </p>
+                        <a href="https://www.linkedin.com/in/michael-otegbola-269b8324a/" target="_blank" 
+                           class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105">
+                            <i class="fab fa-linkedin text-xl"></i>
+                            Connect on LinkedIn
+                        </a>
+                    </div>
+                    <div class="slide-in-right glass-strong p-8 rounded-xl">
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold gradient-text mb-2">50+</div>
+                                <div class="text-muted-foreground">Projects Completed</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold gradient-text mb-2">3+</div>
+                                <div class="text-muted-foreground">Years Experience</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold gradient-text mb-2">25+</div>
+                                <div class="text-muted-foreground">Happy Clients</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold gradient-text mb-2">100%</div>
+                                <div class="text-muted-foreground">Satisfaction Rate</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Other Businesses Section -->
+        <section id="businesses" class="py-20 px-4">
+            <div class="container mx-auto text-center">
+                <h2 class="text-4xl md:text-6xl font-display font-bold mb-8 gradient-text fade-in">
+                    Other Businesses
+                </h2>
+                <div class="glass-strong p-12 rounded-xl max-w-2xl mx-auto fade-in">
+                    <i class="fas fa-rocket text-6xl text-primary mb-6 block"></i>
+                    <h3 class="text-2xl font-bold mb-4">Coming Soon</h3>
+                    <p class="text-muted-foreground text-lg">
+                        Exciting new ventures are in development. This space will showcase 
+                        additional business endeavors and entrepreneurial projects.
+                    </p>
+                    <div class="mt-8">
+                        <div class="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                            Stay Tuned for Updates
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 px-4">
+            <div class="container mx-auto text-center">
+                <h2 class="text-4xl md:text-6xl font-display font-bold mb-12 gradient-text fade-in">
+                    Let's Work Together
+                </h2>
+                <div class="flex flex-col md:flex-row gap-6 justify-center items-center fade-in">
+                    <a href="https://wa.me/2349012919868" target="_blank" 
+                       class="flex items-center gap-3 bg-green-600 hover:bg-green-700 px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105 text-lg">
+                        <i class="fab fa-whatsapp text-2xl"></i>
+                        Chat on WhatsApp
+                    </a>
+                    <a href="https://www.linkedin.com/in/michael-otegbola-269b8324a/" target="_blank" 
+                       class="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105 text-lg">
+                        <i class="fab fa-linkedin text-2xl"></i>
+                        LinkedIn Profile
+                    </a>
+                    <a href="mailto:michael@example.com" 
+                       class="flex items-center gap-3 glass-strong px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105 text-lg" data-mock="true">
+                        <i class="fas fa-envelope text-2xl text-primary"></i>
+                        Send Email
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-12 px-4 border-t border-border">
+        <div class="container mx-auto text-center">
+            <p class="text-muted-foreground mb-4">
+                © 2024 Michael Otegbola. All rights reserved.
+            </p>
+            <p class="text-sm text-muted-foreground">
+                Crafted with passion and cutting-edge web technologies
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // TODO: Implement business logic, API calls, or state management
+        
+        (function() {
+            // Particle System
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let mouse = { x: 0, y: 0 };
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.radius = Math.random() * 2 + 1;
+                    this.alpha = Math.random() * 0.5 + 0.2;
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // Mouse interaction
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        const force = (100 - distance) / 100;
+                        this.vx -= dx * force * 0.001;
+                        this.vy -= dy * force * 0.001;
+                    }
+
+                    // Boundary checks
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                    // Keep particles in bounds
+                    this.x = Math.max(0, Math.min(canvas.width, this.x));
+                    this.y = Math.max(0, Math.min(canvas.height, this.y));
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(0, 212, 255, ${this.alpha})`;
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                for (let i = 0; i < 50; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach(particle => {
+                    particle.update();
+                    particle.draw();
+                });
+
+                // Connect nearby particles
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < 100) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(139, 92, 246, ${0.1 * (100 - distance) / 100})`;
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            // Custom Cursor
+            const cursor = document.getElementById('cursor');
+            document.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+                cursor.style.left = e.clientX - 10 + 'px';
+                cursor.style.top = e.clientY - 10 + 'px';
+            });
+
+            // Dynamic Gradient Background
+            let gradientAngle = 0;
+            function updateGradient() {
+                gradientAngle += 0.5;
+                document.body.style.background = `linear-gradient(${gradientAngle}deg, 
+                    hsl(240, 10%, 4%) 0%, 
+                    hsl(240, 15%, 6%) 50%, 
+                    hsl(240, 10%, 4%) 100%)`;
+                requestAnimationFrame(updateGradient);
+            }
+
+            // Scroll Animations
+            function handleScrollAnimations() {
+                const elements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right');
+                
+                elements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        const delay = element.dataset.delay || '0s';
+                        setTimeout(() => {
+                            element.classList.add('visible');
+                        }, parseFloat(delay) * 1000);
+                    }
+                });
+            }
+
+            // Smooth Scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // 3D Parallax Effect
+            document.addEventListener('mousemove', (e) => {
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
+                
+                document.querySelectorAll('.layer-1').forEach(element => {
+                    element.style.transform = `translateZ(0px) rotateY(${mouseX * 5}deg) rotateX(${mouseY * 5}deg)`;
+                });
+                
+                document.querySelectorAll('.layer-2').forEach(element => {
+                    element.style.transform = `translateZ(50px) rotateY(${mouseX * 10}deg) rotateX(${mouseY * 10}deg)`;
+                });
+                
+                document.querySelectorAll('.layer-3').forEach(element => {
+                    element.style.transform = `translateZ(100px) rotateY(${mouseX * 15}deg) rotateX(${mouseY * 15}deg)`;
+                });
+            });
+
+            // Initialize everything
+            resizeCanvas();
+            initParticles();
+            animate();
+            updateGradient();
+            handleScrollAnimations();
+
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                initParticles();
+            });
+
+            window.addEventListener('scroll', handleScrollAnimations);
+
+            // Performance optimization
+            let ticking = false;
+            function requestTick() {
+                if (!ticking) {
+                    requestAnimationFrame(handleScrollAnimations);
+                    ticking = true;
+                    setTimeout(() => { ticking = false; }, 16); // 60fps throttle
+                }
+            }
+
+            window.addEventListener('scroll', requestTick);
+        })();
+    </script>
+</body>
+</html>
